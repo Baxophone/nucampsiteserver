@@ -52,7 +52,7 @@ partnerRouter.route('/:partnerId')
     res.end(`POST operation not supported on /partners/${req.params.partnerId}`);
 })
 .put((req, res, next) => {
-    Partner.findByIdAndDelete(req.params.partnerId, {
+    Partner.findByIdAndUpdate(req.params.partnerId, {
         $set: req.body
     }, { new: true })
     .then(partner => {
