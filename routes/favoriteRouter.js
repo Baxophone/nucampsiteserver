@@ -4,12 +4,11 @@ const cors = require('./cors');
 const Favorite = require('../models/favorite');
 
 const favoriteRouter = express.Router();
-favoriteRouter.use(bodyParser.json());
 
 favoriteRouter.route('/')
 .options(cors.corsWithOptions, authenticate.verifyUser, (req, res) => res.sendStatus(200))
-.get(cors.cors, (req, res, next) => {
-    Favorite.find({user: req.user._id})
+.get(cors.cors, authenticate.verifyUser, (req, res, next) => {
+    Favorite.find({ user: req.user._id })
     .populate('favorite.user')
     .populate('favorite.campsites')
     .then(favorites => {
@@ -23,7 +22,7 @@ favoriteRouter.route('/')
     Favorite.findOne({user: req.user._id})
     .then(favorites => {
         if (favorites) {
-            console.log(favorite.campsites);
+            console.log(favorites.campsites);
             for (let i = 0; i < req.body.length; i++) {
                 if (favorites.campsites.indexOf(req.body[i]._id) === -1) {
                     favorites.campsites.push(req.body[i]._id);
